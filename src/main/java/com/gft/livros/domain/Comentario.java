@@ -9,8 +9,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Comentario {
@@ -19,10 +26,18 @@ public class Comentario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotEmpty(message = "O livro deve possuir um comentário.")
+	@Size(max = 1000, message ="O comentário deve possuir no máximo 1000 caracteres.")
+	@JsonProperty("comentario") // com Jsonproperty podemos mudar o nome do atributo selecionado
 	private String texto;
 	
+	@NotNull(message = "O comentário deve possuir um usuário")
+	@JsonInclude(Include.NON_NULL)
 	private String usuario;
 	
+	@JsonFormat(pattern ="dd/MM/yyyy")
+	@JsonInclude(Include.NON_NULL)
+	@NotNull(message = "O comentário deve possuir sua data de publicação.")
 	private Date data;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -7,8 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -20,23 +26,31 @@ public class Livro {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotEmpty(message ="O nome do livro não pode estar vazio.")
 	private String nome;
 	
 	@JsonInclude(Include.NON_NULL)
+	@JsonFormat(pattern ="dd/MM/yyyy")
+	@NotNull(message = "A data da publicação tem que estar preenchida.")
 	private Date publicacao;
 	
 	@JsonInclude(Include.NON_NULL)
+	@NotNull(message = "O nome da editora tem que estar preenchido.")
 	private String editora;
 	
 	@JsonInclude(Include.NON_NULL)
+	@NotNull(message = "O resumo tem que estar preenchido.")
+	@Size(max = 1300, message = "O resumo não deve ter mais de 1300 caracteres.")
 	private String resumo;
 	
-	@JsonInclude(Include.NON_NULL)
+	@JsonInclude(Include.NON_EMPTY) 
 	@OneToMany(mappedBy = "livro")
 	private List<Comentario> comentarios;
 	
+	@ManyToOne
+	@JoinColumn(name ="AUTOR_ID")
 	@JsonInclude(Include.NON_NULL)
-	private String autor;
+	private Autor autor;
 	
 	public Livro() {
 		
@@ -94,11 +108,11 @@ public class Livro {
 		this.comentarios = comentarios;
 	}
 
-	public String getAutor() {
+	public Autor getAutor() {
 		return autor;
 	}
 
-	public void setAutor(String autor) {
+	public void setAutor(Autor autor) {
 		this.autor = autor;
 	}
 }

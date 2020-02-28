@@ -3,6 +3,8 @@ package com.gft.livros.resources;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +38,7 @@ public class LivrosResources {
 	
 	//Salvar um objeto
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> salvar(@RequestBody	Livro livro) {
+	public ResponseEntity<Void> salvar(@Valid @RequestBody	Livro livro) {
 		livro = livrosServ.salvar(livro);
 		
 		//Criou uma URI para reprentar o objeto salvo
@@ -50,7 +52,7 @@ public class LivrosResources {
 	//Buscar um objeto pelo ID
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> buscar(@PathVariable("id") Long id) {
-		Livro livro = livrosServ.buscar(id);;
+		Livro livro = livrosServ.buscar(id);
 		return ResponseEntity.status(HttpStatus.OK).body(livro);
 	}
 	
@@ -70,8 +72,9 @@ public class LivrosResources {
 		return ResponseEntity.noContent().build();
 	}
 
-	@RequestMapping(value="/{id}/comentario", method = RequestMethod.POST)
-	public ResponseEntity<Void> addComentario(Long livroId, @RequestBody Comentario comentario) {
+	@RequestMapping(value="/{id}/comentarios", method = RequestMethod.POST)
+	public ResponseEntity<Void> addComentario(@PathVariable("id") Long livroId, 
+			@RequestBody Comentario comentario) {
 		
 		livrosServ.salvarComentario(livroId, comentario);
 		
@@ -80,10 +83,10 @@ public class LivrosResources {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	@RequestMapping(value="/{id}/comentario", method = RequestMethod.GET)
+	@RequestMapping(value="/{id}/comentarios", method = RequestMethod.GET)
 	public ResponseEntity<List<Comentario>> listarComentarios(@PathVariable("id") Long livroId){
-		List<Comentario> comentario = livrosServ.listarComentario(livroId);
-		return ResponseEntity.status(HttpStatus.OK).body(comentario);
+		List<Comentario> comentarios = livrosServ.listarComentario(livroId);
+		return ResponseEntity.status(HttpStatus.OK).body(comentarios);
 	}
 	
 	
