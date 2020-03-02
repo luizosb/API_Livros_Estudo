@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Entity
 public class Livro {
 
-	@JsonInclude(Include.NON_NULL)
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
